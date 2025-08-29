@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Add Travel Option{% endblock %}
+
+{% block content %}
+<div class="container col-md-6 col-lg-5">
+    <h2 class="mb-4">Add Travel Option</h2>
+    <form method="POST" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Add</button>
+        <a href="{% url 'travel_options_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

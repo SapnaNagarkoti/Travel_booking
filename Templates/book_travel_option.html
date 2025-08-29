@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Book Travel Option{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Book {{ travel_option.travel_type }} from {{ travel_option.source }} to {{ travel_option.destination }}</h2>
+    <p><strong>Date & Time:</strong> {{ travel_option.datetime|date:"Y-m-d H:i" }}</p>
+    <p><strong>Price per seat:</strong> ${{ travel_option.price }}</p>
+    <p><strong>Available seats:</strong> {{ travel_option.available_seats }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="seats" class="form-label">Number of Seats</label>
+            <input type="number" id="seats" name="seats" value="1" min="1" max="{{ travel_option.available_seats }}" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Confirm Booking</button>
+        <a href="{% url 'travel_options_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}
