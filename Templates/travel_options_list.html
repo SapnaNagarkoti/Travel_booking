@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Available Travel Options{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Available Travel Options</h2>
+
+    <!-- Filter Form -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="type" class="form-label">Type</label>
+            <select name="type" id="type" class="form-select">
+                <option value="">All</option>
+                <option value="Flight" {% if request.GET.type == "Flight" %}selected{% endif %}>Flight</option>
+                <option value="Train" {% if request.GET.type == "Train" %}selected{% endif %}>Train</option>
+                <option value="Bus" {% if request.GET.type == "Bus" %}selected{% endif %}>Bus</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="source" class="form-label">Source</label>
+            <input type="text" name="source" id="source" class="form-control" value="{{ request.GET.source }}">
+        </div>
+        <div class="col-md-3">
+            <label for="destination" class="form-label">Destination</label>
+            <input type="text" name="destination" id="destination" class="form-control" value="{{ request.GET.destination }}">
+        </div>
+        <div class="col-md-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" name="date" id="date" class="form-control" value="{{ request.GET.date }}">
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{% url 'travel_options_list' %}" class="btn btn-secondary ms-2">Reset</a>
+        </div>
+    </form>
+
+    <!-- Travel Options Table -->
+    {% if travel_options %}
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Date & Time</th>
+                <th>Price</th>
+                <th>Seats Available</th>
+                <th>Book</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for option in travel_options %}
+            <tr>
+                <td>{{ option.travel_type }}</td>
+                <td>{{ option.source }}</td>
+                <td>{{ option.destination }}</td>
+                <td>{{ option.datetime|date:"Y-m-d H:i" }}</td>
+                <td>${{ option.price }}</td>
+                <td>{{ option.available_seats }}</td>
+                <td>
+                    {% if option.available_seats > 0 %}
+                    <a href="{% url 'book_travel_option' option.id %}" class="btn btn-sm btn-success">Book Now</a>
+                    {% else %}
+                    <span class="text-muted">Sold Out</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No travel options found matching your criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}
